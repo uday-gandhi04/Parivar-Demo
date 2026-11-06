@@ -1,0 +1,27 @@
+{
+  "name": "parivar-demo-api",
+  "version": "0.0.1",
+  "description": "Read-only public demonstration API for Parivar using synthetic family data.",
+  "type": "module",
+  "private": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node --watch src/server/index.js",
+    "start": "node src/server/index.js",
+    "demo:validate": "node scripts/validate-demo-graph.js --file ./data/Parivar_Demo_Family_250_Members.xlsx",
+    "demo:dry-run": "node scripts/import-excel.js --file ./data/Parivar_Demo_Family_250_Members.xlsx --family PARIVAR_DEMO --dry-run --report ./data/demo-import-report.json",
+    "demo:import": "node scripts/import-excel.js --file ./data/Parivar_Demo_Family_250_Members.xlsx --family PARIVAR_DEMO --reset"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.7.0",
+    "morgan": "^1.10.0",
+    "xlsx": "file:vendor/xlsx-0.20.3.tgz"
+  }
+}

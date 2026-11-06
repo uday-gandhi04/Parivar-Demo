@@ -1,0 +1,20 @@
+{
+  "summary": {
+    "familyId": "PARIVAR_DEMO",
+    "members": 250,
+    "generations": 6,
+    "founderBranches": 8,
+    "businesses": 45,
+    "educations": 135,
+    "demoPerspective": {
+      "mid": 1051,
+      "name": "Aarav Vardhan"
+    },
+    "reachableFromDemoPerspective": 250,
+    "connected": true,
+    "errors": 0,
+    "warnings": 0
+  },
+  "errors": [],
+  "warnings": []
+}
