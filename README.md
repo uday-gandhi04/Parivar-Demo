@@ -1,178 +1,344 @@
-# Parivar Demo
+# Parivar — Family Tree & Relationship Explorer
 
-A public, read-only demonstration of **Parivar**, a family graph and relationship-exploration application. This repository is intentionally separate from the private Parivar application and must use its own MongoDB project/cluster, database credentials, deployment secrets, and synthetic dataset.
+A full-stack family relationship management platform that transforms complex family structures into an interactive, searchable, multi-generational family graph.
 
-> **Privacy boundary:** this project contains fictional data only. Never copy a production `.env`, MongoDB URI, Excel export, profile photo, private handoff document, or real family record into this repository.
+**Parivar Demo** is a public, read-only version of the application, built with an entirely fictional dataset so visitors can explore its features without accessing private family information.
 
-## Demo dataset
+<p align="center">
+  <a href="https://YOUR-FRONTEND-URL.onrender.com">
+    <strong>🚀 Live Demo</strong>
+  </a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/uday-gandhi04/Parivar-Demo">
+    <strong>💻 Source Code</strong>
+  </a>
+</p>
 
-The included workbook `data/Parivar_Demo_Family_250_Members.xlsx` contains:
+---
 
-- **250 fictional members** under the family ID `PARIVAR_DEMO`.
-- **6 generations** and **8 main branches** descending from the fictional founder couple.
-- **45 synthetic business records** and **135 synthetic education records**.
-- No real mobile numbers, email addresses, profile photos, or production records.
-- A fixed viewing perspective: **Aarav Vardhan** (`m_id = 1051`).
+## Overview
 
-All names, dates, cities, relationships, education details, and business details are synthetic. The workbook has the exact sheet names and columns expected by the Parivar Excel importer: `F_master`, `members`, `business`, and `education`. It also includes a `Guide` sheet describing the dataset.
+Managing large family structures across multiple generations can become complicated, especially when relationships, personal profiles, educational backgrounds, and business information are scattered across different records.
 
-## What visitors can do
+Parivar provides a centralized platform to explore and understand these connections through an interactive family graph and relationship discovery system.
 
-- Enter the public demo in one click; no registration, email, or OTP is required.
-- Browse and search the 250-member fictional family directory.
-- Explore the multi-generation graph.
-- Open member profiles and see computed relationships from Aarav's perspective.
-- Use the relationship explorer to discover how two members are connected.
-- View synthetic education and business information.
+The application demonstrates how a structured database, graph traversal, and an intuitive interface can make complex family relationships accessible and easy to navigate.
 
-The public application is read-only. Editing, adding/deleting members, role changes, uploads, wishes, push notifications, and the AI chatbot are not included in this demo.
+### Demo Dataset
 
-## Repository structure
+The public demonstration uses a completely fictional family dataset.
+
+| Dataset | Records |
+|---|---:|
+| Family Members | 250 |
+| Generations | 6 |
+| Main Family Branches | 8 |
+| Business Records | 45 |
+| Education Records | 135 |
+
+All names, relationships, dates, locations, educational details, and business information are synthetic.
+
+## Features
+
+### 1. Family Directory
+- Browse a directory of 250 fictional family members.
+- Search and discover members.
+- Access individual member profiles.
+
+### 2. Interactive Family Tree
+- Visualize multi-generational family structures.
+- Explore different family branches.
+- Navigate parent-child and spouse relationships.
+
+### 3. Member Profiles
+- View individual family member information.
+- Explore family connections.
+- Access educational and business information.
+
+### 4. Relationship Explorer
+- Discover how two family members are connected.
+- Calculate relationships from a fixed reference member.
+- Explore intermediate connections across generations.
+- Display relationship descriptions, including Hindi kinship terminology.
+
+### 5. Education & Business Directory
+- Explore educational backgrounds.
+- Browse family business information.
+- Discover connections between members and their associated records.
+
+### 6. Public Demo Access
+- One-click demo access without registration or OTP.
+- Fixed synthetic viewer identity.
+- Read-only access enforced at the API level.
+- No access to the private production database.
+
+## Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| Frontend | React, Vite |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Visualization | D3.js |
+| Authentication | JWT |
+| Deployment | Render |
+| Dataset | Excel, SheetJS |
+
+## Architecture
+
+The application follows a client-server architecture.
 
 ```text
-Parivar-Demo/
-├── data/
-│   └── Parivar_Demo_Family_250_Members.xlsx
-├── scripts/
-│   ├── import-excel.js
-│   └── validate-demo-graph.js
-├── src/
-│   ├── lib/                 # MongoDB connection, date parsing, logging
-│   ├── models/              # Family, Member, Business, Education
-│   └── server/              # Express API, fixed demo auth, read-only routes
-├── vendor/                 # Vendored SheetJS package used by the importer
-├── web/                    # React + Vite frontend
-├── .env.example
-└── README.md
+                  Visitor
+                     |
+                     v
+             React Frontend
+                (Vite)
+                     |
+                 REST API
+                     |
+                     v
+             Express Backend
+                     |
+              JWT Middleware
+                     |
+              Read-only Access
+                     |
+                     v
+                MongoDB
+               (Atlas)
 ```
 
-## Requirements
+The frontend communicates with the Express API through REST endpoints. The backend validates demo sessions, restricts access to the designated synthetic family, and serves read-only data.
+
+## Security & Privacy
+
+The public demo is intentionally isolated from the private Parivar application.
+
+- Uses a separate MongoDB Atlas project/cluster and database.
+- Contains fictional data only.
+- Uses dedicated database credentials and JWT secrets.
+- Demo authentication issues a short-lived JWT for a fixed viewer.
+- API requests are restricted to the `PARIVAR_DEMO` family.
+- Write operations are rejected server-side.
+- No production credentials, personal records, or profile photographs are included.
+
+The demo does not include account registration, OTP, uploads, notifications, wishes, or AI chatbot functionality.
+
+## Getting Started
+
+### Prerequisites
 
 - Node.js 20 or newer
-- A **new, dedicated MongoDB Atlas project/cluster** created only for this demo
-- A separate backend service and frontend deployment
+- npm
+- MongoDB Atlas account
 
-Do not reuse the MongoDB cluster, database user, connection string, JWT secret, Cloudinary account, email account, or environment variables from the private Parivar application.
+### 1. Clone the repository
 
-## 1. Create and configure the demo database
+```bash
+git clone https://github.com/uday-gandhi04/Parivar-Demo.git
+cd Parivar-Demo
+```
 
-Create a new MongoDB Atlas project and a new cluster for Parivar Demo. Create a database named exactly `parivar_demo`, then create a database user with access only to that database.
-
-From the repository root:
+### 2. Install backend dependencies
 
 ```bash
 npm install
+```
+
+### 3. Configure environment variables
+
+Copy the example environment file:
+
+```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+Configure the following:
 
-```dotenv
-MONGO_URI=mongodb+srv://<demo-user>:<url-encoded-password>@<demo-cluster>.mongodb.net/parivar_demo?retryWrites=true&w=majority
+```env
+MONGO_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/parivar_demo?retryWrites=true&w=majority
+
 AUTH_JWT_SECRET=<unique-random-secret-at-least-32-characters>
+
 DEMO_MODE=true
 DEMO_FID=PARIVAR_DEMO
 DEMO_MEMBER_ID=1051
+
 FRONTEND_URLS=http://localhost:5173
+
 PORT=4000
 NODE_ENV=development
 ```
 
-Generate a fresh JWT secret:
+Generate a secure JWT secret:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
-The API refuses to start unless `DEMO_MODE=true`, `AUTH_JWT_SECRET` is at least 32 characters, and the MongoDB URI names the database `parivar_demo`. The importer only accepts `--family PARIVAR_DEMO` and requires demo mode before writing.
+**Important:** Use a dedicated demo database. Never use production credentials or point the demo importer at the private Parivar database.
 
-## 2. Validate and import the synthetic workbook
+### 4. Validate and import the dataset
 
-The graph validator does **not** connect to MongoDB. It checks the workbook for:
-
-- Exactly 250 members and one demo family row.
-- Duplicate member IDs and invalid/missing dates or gender values.
-- Missing parent/spouse references, self-links, incompatible parent gender, and non-reciprocal spouse links.
-- Parent-child cycles and implausible parent ages.
-- Six generations and eight founder branches.
-- Business/education records pointing to valid members and plausible education years.
-- No disconnected members using **BFS from Aarav Vardhan (`1051`)**.
-
-Run both checks before writing to MongoDB:
+The repository includes a synthetic Excel workbook and validation utilities.
 
 ```bash
 npm run demo:validate
 npm run demo:dry-run
-```
-
-Only when both complete with zero errors should you import the workbook:
-
-```bash
 npm run demo:import
 ```
 
-The import command uses `--reset`, but it is guarded to the `PARIVAR_DEMO` family ID, `DEMO_MODE=true`, and the database named `parivar_demo`. It deletes/reloads only that synthetic family within the dedicated demo database. **Never point this command at the private Parivar database.** The report from the validated workbook is included at `data/demo-validation-report.json`.
+The importer is guarded to accept only the designated demo family and database.
 
-## 3. Run the API locally
-
-From the repository root:
+### 5. Start the backend
 
 ```bash
 npm run dev
 ```
 
-The API listens on `http://localhost:4000`.
+Backend:
 
-Check health:
-
-```bash
-curl http://localhost:4000/api/health
+```text
+http://localhost:4000
 ```
 
-The public demo session endpoint is `POST /api/auth/demo-session`. It issues a short-lived (two-hour) JWT for the single synthetic viewer. All family data routes require this token, are scoped to `PARIVAR_DEMO`, and only expose read methods. All write methods are rejected server-side.
+Health endpoint:
 
-## 4. Run the frontend locally
+```text
+http://localhost:4000/api/health
+```
 
-In a second terminal:
+### 6. Start the frontend
+
+Open another terminal:
 
 ```bash
 cd web
 npm install
-cp .env.example .env
+```
+
+Create `web/.env`:
+
+```env
+VITE_API_URL=http://localhost:4000
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-The frontend is available at `http://localhost:5173` and uses `VITE_API_URL=http://localhost:4000` from `web/.env`.
+Frontend:
 
-## 5. Deploy separately
+```text
+http://localhost:5173
+```
 
-Deploy the API and frontend as separate services. Do not combine them with the private Parivar deployment.
+## Deployment
 
-### Backend service
+The public demo is deployed as two independent Render services.
 
-- Root directory: repository root
-- Build/install command: `npm ci`
-- Start command: `npm start`
-- Environment variables: `MONGO_URI`, `AUTH_JWT_SECRET`, `DEMO_MODE=true`, `DEMO_FID=PARIVAR_DEMO`, `DEMO_MEMBER_ID=1051`, `FRONTEND_URLS=<exact-frontend-origin>`, `NODE_ENV=production`, and hosting-provided `PORT`.
-- `MONGO_URI` must point to the new dedicated cluster and the database named `parivar_demo`.
+| Service | Configuration |
+|---|---|
+| Backend | Render Web Service |
+| Frontend | Render Static Site |
+| Database | MongoDB Atlas |
 
-### Frontend service
+### Backend
 
-- Root directory: `web`
-- Build/install command: `npm ci && npm run build`
-- Publish directory: `dist`
-- Build environment variable: `VITE_API_URL=<deployed-demo-api-origin>`
+- Root Directory: Repository root
+- Build Command: `npm ci`
+- Start Command: `npm start`
 
-Set `FRONTEND_URLS` on the API to the exact deployed frontend origin (including `https://`, with no trailing slash). Configure the frontend host to rewrite React Router paths to `index.html` so `/directory`, `/graph`, `/explore`, `/about`, and member profile URLs load on refresh.
+Required environment variables:
 
-## Read-only and isolation guarantees
+- `MONGO_URI`
+- `AUTH_JWT_SECRET`
+- `DEMO_MODE`
+- `DEMO_FID`
+- `DEMO_MEMBER_ID`
+- `FRONTEND_URLS`
+- `NODE_ENV`
 
-- Only the fixed synthetic viewer can obtain a demo session.
-- The token expires after two hours and can be renewed by re-entering the demo.
-- API reads use the token's fixed `fid`; another family ID is rejected.
-- All write methods are rejected by backend middleware; hiding controls in React is not the security boundary.
-- The frontend identifies the session as `DEMO MODE · Fictional family · Read-only access`.
-- OTP, account creation, uploads, notifications, wishes and AI chat are not part of the public demo.
-- The database connection guard accepts only the database name `parivar_demo`; the operator must still create and use a separate MongoDB cluster/project.
+Render supplies the `PORT` environment variable.
 
-This is a portfolio demonstration, not a source of real genealogical information.
+### Frontend
+
+- Root Directory: `web`
+- Build Command: `npm ci && npm run build`
+- Publish Directory: `dist`
+
+Required build environment variable:
+
+```env
+VITE_API_URL=<deployed-backend-url>
+```
+
+Configure a rewrite rule on the frontend host:
+
+```text
+Source:      /*
+Destination: /index.html
+Action:      Rewrite (200)
+```
+
+The backend CORS configuration must contain the exact deployed frontend origin.
+
+**Hosting note:** The backend uses Render's free web service, which may spin down after inactivity. The first request after a period of inactivity can take longer while the service starts.
+
+## Repository Structure
+
+```text
+Parivar-Demo/
+│
+├── data/
+│   └── Parivar_Demo_Family_250_Members.xlsx
+│
+├── scripts/
+│   ├── import-excel.js
+│   └── validate-demo-graph.js
+│
+├── src/
+│   ├── lib/
+│   ├── models/
+│   └── server/
+│
+├── vendor/
+│
+├── web/
+│   ├── src/
+│   ├── public/
+│   └── ...
+│
+├── .env.example
+├── package.json
+└── README.md
+```
+
+## Future Scope
+
+Potential directions for the full Parivar platform include:
+
+- Extended family collaboration and member management.
+- More advanced relationship discovery.
+- Richer family history and archival information.
+- Additional visualization and exploration capabilities.
+
+These are future directions and are not part of the current public demo.
+
+---
+
+## Author
+
+**Uday Gandhi**
+
+Computer Science Undergraduate | Full-Stack Developer
+
+- GitHub: https://github.com/uday-gandhi04
+- Portfolio: https://udaygandhi.is-a.dev
+
+---
+
+*Parivar Demo is a portfolio demonstration containing fictional family data. It is not intended to provide real genealogical information.*
